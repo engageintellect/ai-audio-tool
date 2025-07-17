@@ -9,6 +9,7 @@ Batch convert all `.m4a` files to `.wav`, preserving folder structure, using `ff
 - Parallel processing for faster conversion
 - Clean CLI-style logging with success/failure feedback
 - **Automatically clears converted files from `downloads/`, preserving `.gitkeep`**
+- Prints a cool ASCII art header using `figlet`, with a fallback if not installed
 
 ## 📁 Project Structure
 ```
@@ -23,7 +24,8 @@ m4a-wav-batch-transcoder/
 ```
 
 ## 🚀 Usage
-### 1. Install ffmpeg
+### 1. Install dependencies
+#### ffmpeg
 Make sure `ffmpeg` is installed and available in your system PATH:
 ```bash
 # On macOS
@@ -31,6 +33,16 @@ brew install ffmpeg
 
 # On Ubuntu
 sudo apt install ffmpeg
+```
+
+#### figlet (optional)
+If you want the fancy ASCII banner:
+```bash
+# On macOS
+brew install figlet
+
+# On Ubuntu
+sudo apt install figlet
 ```
 
 ### 2. Set up Python environment
@@ -56,5 +68,4 @@ After conversion, all `.m4a` files (except `.gitkeep`) will be deleted from `dow
 ## 📦 requirements.txt
 ```txt
 ```
-*You don’t need any Python packages right now — `ffmpeg` is a system dependency.*
-
+*No Python packages needed — `ffmpeg` and `figlet` are system dependencies.*
