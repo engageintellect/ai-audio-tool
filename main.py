@@ -36,9 +36,12 @@ def clear_downloads_folder():
     print("\n[*] Clearing downloads directory...")
     for root, dirs, files in os.walk(DOWNLOADS_DIR, topdown=False):
         for name in files:
-            os.remove(os.path.join(root, name))
+            if name != '.gitkeep':
+                os.remove(os.path.join(root, name))
         for name in dirs:
-            os.rmdir(os.path.join(root, name))
+            dir_path = os.path.join(root, name)
+            if not os.listdir(dir_path):
+                os.rmdir(dir_path)
     print("[\u2713] Downloads directory cleared.")
 
 def main():
@@ -56,4 +59,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
