@@ -1,5 +1,6 @@
 import os
 import subprocess
+import shutil
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Set up paths
@@ -31,6 +32,15 @@ def get_all_m4a_files(base_dir: str):
                 files.append((full_path, out_path))
     return files
 
+def clear_downloads_folder():
+    print("\n[*] Clearing downloads directory...")
+    for root, dirs, files in os.walk(DOWNLOADS_DIR, topdown=False):
+        for name in files:
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            os.rmdir(os.path.join(root, name))
+    print("[\u2713] Downloads directory cleared.")
+
 def main():
     print("[*] Scanning for .m4a files...")
     file_pairs = get_all_m4a_files(DOWNLOADS_DIR)
@@ -42,6 +52,7 @@ def main():
             future.result()
 
     print("\n[\u2713] All conversions completed.")
+    clear_downloads_folder()
 
 if __name__ == "__main__":
     main()
