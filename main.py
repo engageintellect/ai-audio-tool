@@ -3,6 +3,12 @@ import subprocess
 import shutil
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+# Print header using figlet if available, fallback to plain text
+if shutil.which("figlet"):
+    os.system("figlet -f slant 'm4a -> wav'")
+else:
+    print("=== m4a -> wav ===")
+
 # Set up paths
 DOWNLOADS_DIR = 'downloads'
 OUTPUT_DIR = 'output'
@@ -47,6 +53,10 @@ def clear_downloads_folder():
 def main():
     print("[*] Scanning for .m4a files...")
     file_pairs = get_all_m4a_files(DOWNLOADS_DIR)
+    if not file_pairs:
+        print("[!] No .m4a files found in downloads/. Exiting.")
+        return
+
     print(f"[*] Found {len(file_pairs)} file(s) to convert.\n")
 
     with ThreadPoolExecutor() as executor:
@@ -59,3 +69,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
