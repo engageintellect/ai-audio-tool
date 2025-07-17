@@ -7,12 +7,14 @@ Batch convert all `.m4a` files to `.wav`, preserving folder structure, using `ff
 - Convert all `.m4a` files to `.wav`
 - Preserve folder structure in the `output/` directory
 - Parallel processing for faster conversion
-- Clean CLI-style logging
+- Clean CLI-style logging with success/failure feedback
+- **Automatically clears converted files from `downloads/`, preserving `.gitkeep`**
 
 ## 📁 Project Structure
 ```
 m4a-wav-batch-transcoder/
 ├── downloads/       # Place all your .m4a files and folders here
+│   └── .gitkeep     # Ensures folder remains in Git
 ├── output/          # Converted .wav files will be saved here
 ├── main.py          # Python script that does the work
 ├── README.md        # This file
@@ -46,7 +48,8 @@ Place files anywhere inside the `downloads/` directory (subdirectories are suppo
 python main.py
 ```
 
-Converted `.wav` files will appear in `output/` with the same structure as `downloads/`.
+Converted `.wav` files will appear in `output/` with the same structure as `downloads/`. 
+After conversion, all `.m4a` files (except `.gitkeep`) will be deleted from `downloads/`.
 
 ---
 
