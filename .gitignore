@@ -1,3 +1,7 @@
 /downloads/*
 !/downloads/.gitkeep
 
+/output/*
+!/output/.gitkeep
+
+
