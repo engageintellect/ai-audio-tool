@@ -9,9 +9,9 @@ if shutil.which("figlet"):
 else:
     print("=== m4a -> wav ===")
 
-# Set up paths
-DOWNLOADS_DIR = 'downloads'
-OUTPUT_DIR = 'output'
+# Set up paths (update this to suit your environment)
+DOWNLOADS_DIR = '~/Repositories/m4a-wav-batch-transcoder/downloads'
+OUTPUT_DIR = '~/Repositories/m4a-wav-batch-transcoder/output'
 
 def convert_file(input_path: str, output_path: str):
     try:
