@@ -1,4 +1,4 @@
-# 🎧 m4a-wav-batch-transcoder
+# 🎧 ai-audio-tool
 
 Batch convert audio files to `.wav`, preserve folder structure, clean up after, and optionally analyze them using GPT-4o to auto-rename with **musical key** and **tempo**.
 
@@ -20,7 +20,7 @@ Batch convert audio files to `.wav`, preserve folder structure, clean up after, 
 ## 📁 Project Structure
 
 ```
-m4a-wav-batch-transcoder/
+ai-audio-tool/
 ├── downloads/               # Drop your audio files in here
 │   └── .gitkeep             # Keeps directory in Git
 ├── output/                  # Converted files show up here
