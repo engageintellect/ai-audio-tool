@@ -1,3 +1,4 @@
+import argparse
 import os
 import re
 import openai
@@ -32,7 +33,7 @@ def clean_filename(filepath):
     return name.strip()
 
 def build_prompt(filenames):
-    prompt = """You are a music expert with internet access and knowledge of modern music. For each track name listed below, return the accurate musical **key** and **tempo (BPM)** based on real metadata — do not guess or invent.
+    prompt = """You are a music expert with knowledge of modern music. For each track name listed below, return the accurate musical **key** and **tempo (BPM)** based on real metadata — do not guess or invent.
 
 Many filenames include the artist and track name, sometimes in folder names or in parentheses. Clean up the names, infer the correct title and artist, and return:
 
@@ -79,37 +80,57 @@ def parse_response(response):
             results.append(current)
     return results
 
-def rename_files(filepaths, metadata_list):
+def rename_files(filepaths, metadata_list, dry_run=False):
     renamed = 0
     for meta in tqdm(metadata_list, desc="[🎵] Renaming"):
         match = None
+        best_score = 0
+
         for f in filepaths:
             cleaned = clean_filename(f).lower()
-            if all(part.lower() in cleaned for part in meta["name"].split(" - ")):
+            target = meta["name"].lower()
+            score = sum(1 for word in target.split() if word in cleaned)
+
+            if score > best_score:
                 match = f
-                break
-            else:
-                close = get_close_matches(meta["name"].lower(), [cleaned], n=1, cutoff=0.8)
-                if close:
-                    match = f
-                    break
+                best_score = score
+
         if match:
             dir_path = os.path.dirname(match)
             new_name = f"{meta['name']} ({meta['key']} - {meta['bpm']} BPM).wav"
             new_path = os.path.join(dir_path, new_name)
-            os.rename(match, new_path)
-            renamed += 1
+
+            if not os.path.exists(match):
+                print(f"[!] Skipped: '{match}' no longer exists.")
+                continue
+            if match == new_path:
+                print(f"[!] Skipped: '{match}' is already named correctly.")
+                continue
+
+            if dry_run:
+                print(f"[dry-run] Would rename:\n  {match}\n  → {new_path}")
+            else:
+                try:
+                    os.rename(match, new_path)
+                    renamed += 1
+                except Exception as e:
+                    print(f"[!] Failed to rename '{match}' → '{new_path}': {e}")
         else:
-            print(f"[!] Skipped: No match found for '{meta['name']}'")
+            print(f"[!] Skipped: No confident match for '{meta['name']}'")
     return renamed
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Analyze and rename tracks with key and BPM using GPT-4o.")
+    parser.add_argument("--dry-run", action="store_true", help="Preview renaming actions without changing any files.")
+    args = parser.parse_args()
+
     files = collect_tracks()
     clean_names = [clean_filename(f) for f in files]
 
     response = get_metadata_responses(clean_names)
     metadata = parse_response(response)
 
-    count = rename_files(files, metadata)
+    count = rename_files(files, metadata, dry_run=args.dry_run)
     print(f"\n[✓] Metadata-based renaming complete. Renamed {count} file(s).")
+    print(f"[📁] Output directory: {os.path.abspath(TRACK_DIR)}")
 
