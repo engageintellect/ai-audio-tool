@@ -4,4 +4,6 @@
 /output/*
 !/output/.gitkeep
 
+.env
+
 
